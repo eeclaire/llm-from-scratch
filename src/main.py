@@ -8,6 +8,8 @@ def read_text(filepath: str):
 
     tokenizer = Tokenizer()
     tokenizer.build_vocab(raw_text)
+
+    '''
     sample_text = """
     "It's the last he painted, you know,"
     Mrs. Gisburn said with pardonable pride.
@@ -21,7 +23,16 @@ def read_text(filepath: str):
     ]
     reverted_text = tokenizer.decode(embedding)
     print(reverted_text)
+    '''
+
+    #
+    text1 = "Hello, do you like tea?"
+    text2 = "In the sunlit terraces of the palace."
+    text = " <|eot|> ".join((text1, text2))
+    print(text)
+    print(tokenizer.encode(text))
+    print(tokenizer.decode(tokenizer.encode(text)))
 
 
 if __name__ == '__main__':
-    read_text("the_verdict.txt")
+    read_text("../the_verdict.txt")

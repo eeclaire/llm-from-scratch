@@ -5,6 +5,9 @@ DecoderType = dict[int, str]
 
 
 class Tokenizer:
+    UNKNOWN_WORD = "<|unk|>"
+    END_OF_TEXT = "<|eot|>"
+
     def __init__(self):
         self.encoder = EncoderType()
         self.decoder = DecoderType()
@@ -14,10 +17,11 @@ class Tokenizer:
         self.encoder: EncoderType = self.__build_vocabulary(set(words))
         self.decoder: DecoderType = {i: s for s, i in self.encoder.items()}
 
-    @staticmethod
-    def __build_vocabulary(words: set[str]) -> dict[str, int]:
+    def __build_vocabulary(self, words: set[str]) -> dict[str, int]:
         vocabulary = {}
         words = sorted(words)
+        words.append(self.END_OF_TEXT)
+        words.append(self.UNKNOWN_WORD)
         for i, word in enumerate(words):
             vocabulary[word] = i
 
@@ -30,7 +34,8 @@ class Tokenizer:
 
     def encode(self, text: str) -> list[int]:
         words = self.tokenize(text)
-        return [self.encoder[word] for word in words]
+        unknown_embedding = self.encoder[self.UNKNOWN_WORD]
+        return [self.encoder.get(word, unknown_embedding) for word in words]
 
     def decode(self, embeddings: list[int]) -> str:
         words = [self.decoder[word] for word in embeddings]
